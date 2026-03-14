@@ -145,11 +145,24 @@ Edit `mine.sh`:
 
 ### Script Setup
 
+All `.example.sh` files must be copied without the `example` suffix before use:
+
+**Mining scripts** (project root):
+```bash
+cp mine.server.simple.example.sh mine.sh   # Master node
+cp mine.client.simple.example.sh mine.sh   # Slave node
+```
+
+**CADO-NFS and msieve scripts** (bin/ directory):
 ```bash
 cd bin
 cp cadorun.example.sh cadorun.sh
 cp msieverun.example.sh msieverun.sh
 ```
+
+> **Important:** `cadorun.sh` and `msieverun.sh` are called internally by the Python miner. The filenames must be exactly `cadorun.sh` and `msieverun.sh` - any other name will cause the miner to fail.
+>
+> These scripts contain parameters that must be tuned to your hardware environment and the current network difficulty (candidate bit size). Key settings include thread counts, polynomial selection options, and sieving parameters. Review and adjust them according to your CPU core count and the `Diff` value shown in the miner status line.
 
 ## Running
 
