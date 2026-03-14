@@ -92,8 +92,9 @@ make -j $(nproc)
 # 6. msieve (copy to multiple directories)
 # =============================================================================
 cd $rootDir
+cp -r msieve msieve_nfsathome
 for i in 0 1 2 3 4 5; do
-    cp -r msieve_nfsathome msieve_nfsathome${i}
+    cp -r msieve msieve_nfsathome${i}
 done
 
 # =============================================================================
