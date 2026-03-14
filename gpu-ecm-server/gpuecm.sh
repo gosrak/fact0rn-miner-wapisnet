@@ -1,0 +1,8 @@
+#!/bin/sh
+export GPUECM_BIND_PORT=19302
+export GPU_DEVICE_ID=0
+export STEP_OF_CANDIDATE_SIEVING=6
+export MULTIPLE_EQUAL_RATIO=4
+export MINIMUM_B1=1000 
+./gpuecmServer 
+
