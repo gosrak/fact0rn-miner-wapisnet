@@ -36,6 +36,9 @@ pip install numpy
 pip install flask
 pip install sphinx-rtd-theme
 pip install recommonmark
+pip install py-cpuinfo
+pip install psutil
+pip install nats-py
 
 # =============================================================================
 # 3. OpenMPI (source build)
