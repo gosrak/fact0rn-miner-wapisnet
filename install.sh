@@ -107,6 +107,17 @@ cd $rootDir
 cp src/*.py bin/
 
 # =============================================================================
+# 7-1. Git post-merge hook (auto-copy src/*.py to bin/ on git pull)
+# =============================================================================
+cat > $rootDir/.git/hooks/post-merge << 'HOOK'
+#!/bin/bash
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+cp "$ROOT_DIR"/src/*.py "$ROOT_DIR"/bin/
+echo "post-merge hook: src/*.py copied to bin/"
+HOOK
+chmod +x $rootDir/.git/hooks/post-merge
+
+# =============================================================================
 # 8. Sieve (primorial table generation)
 # =============================================================================
 cd $rootDir/bin/isieve
