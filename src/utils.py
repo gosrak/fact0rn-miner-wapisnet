@@ -269,17 +269,27 @@ def getGpuInfo():
         )
 
         gpu_info = []
+        def safe_int(val, default=-1):
+            val = val.strip()
+            if val.startswith("[") or not val.isdigit():
+                return default
+            return int(val)
+
         for line in result.stdout.strip().split("\n"):
             try:
-                index, name, memory_total, memory_used, memory_free, utilization_gpu, temperature_gpu = line.split(", ")
+                parts = line.split(", ")
+                if len(parts) != 7:
+                    print(f"Warning: Skipping malformed line: '{line}'")
+                    continue
+                index, name, memory_total, memory_used, memory_free, utilization_gpu, temperature_gpu = parts
                 gpu_info.append({
-                    "index": int(index),
-                    "name": name,
-                    "memory_total_MB": int(memory_total),
-                    "memory_used_MB": int(memory_used),
-                    "memory_free_MB": int(memory_free),
-                    "utilization_gpu_percent": int(utilization_gpu),
-                    "temperature_gpu_C": int(temperature_gpu)
+                    "index": safe_int(index, 0),
+                    "name": name.strip(),
+                    "memory_total_MB": safe_int(memory_total, 0),
+                    "memory_used_MB": safe_int(memory_used, 0),
+                    "memory_free_MB": safe_int(memory_free, 0),
+                    "utilization_gpu_percent": safe_int(utilization_gpu, -1),
+                    "temperature_gpu_C": safe_int(temperature_gpu, -1)
                 })
             except ValueError as ve:
                 print(f"Warning: Skipping malformed line: '{line}'. Error: {ve}")
