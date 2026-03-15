@@ -144,7 +144,7 @@ kill $(lsof -t -i:$PortNum)
 
 ./cado-nfs.py --server $cand tasks.workdir=$workdir server.port=$PortNum server.ssl=no server.whitelist=0.0.0.0/0 $addOpt \
 tasks.filter.required_excess=0.07 tasks.filter.target_density=120.0 tasks.filter.purge.keep=170 \
-tasks.polyselect.threads=8 --client-threads 4 -t all --no-colors
+tasks.polyselect.threads=8 --client-threads 2 -t all --no-colors
 
 
 # -------------------------------------------------------------------------------------------------------------------------
