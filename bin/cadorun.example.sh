@@ -49,6 +49,36 @@ tasks.wutimeout=120 \
 tasks.maxtimedout=100 "
 fi
 
+# Calculate candidate bit length and load sieving parameters from JSON
+BITS=$(python3 -c "print(int('$cand').bit_length())")
+sieve_opts=$(python3 -c "
+import json, sys, os
+bits = $BITS
+json_path = os.path.join('$SHELL_PATH', 'sieving.params.json')
+with open(json_path) as f:
+    entries = json.load(f)
+candidates = [e for e in entries if e['bits'] <= bits]
+if candidates:
+    match = max(candidates, key=lambda e: e['bits'])
+else:
+    match = min(entries, key=lambda e: e['bits'])
+mapping = {
+    'lim0': 'tasks.lim0', 'lim1': 'tasks.lim1',
+    'lpb0': 'tasks.lpb0', 'lpb1': 'tasks.lpb1',
+    'mfb0': 'tasks.sieve.mfb0', 'mfb1': 'tasks.sieve.mfb1',
+    'lambda0': 'tasks.sieve.lambda0', 'lambda1': 'tasks.sieve.lambda1',
+    'ncurves0': 'tasks.sieve.ncurves0', 'ncurves1': 'tasks.sieve.ncurves1',
+    'I': 'tasks.I', 'qrange': 'tasks.sieve.qrange',
+    'qmin': 'tasks.sieve.qmin', 'rels_wanted': 'tasks.sieve.rels_wanted',
+}
+parts = []
+for k, cado_key in mapping.items():
+    if k in match:
+        parts.append(f'{cado_key}={match[k]}')
+print(' '.join(parts))
+print(f'# Selected params for {bits} bits (matched entry: {match[\"bits\"]} bits)', file=sys.stderr)
+")
+
 if [ "$mode" = "poly" ]; then
    PortNum=$(($PortNum + 1))
 fi
@@ -107,39 +137,9 @@ fi
 kill $(lsof -t -i:$PortNum)
 
 
-if [ "$CadoInx" -eq 1 ]; then
-	./cado-nfs.py --server $cand tasks.workdir=$workdir server.port=$PortNum server.ssl=no server.whitelist=0.0.0.0/0 $addOpt \
-	tasks.lim0=5200000 \
-	tasks.lim1=7000000 \
-	tasks.lpb0=28 \
-	tasks.lpb1=29 \
-	tasks.sieve.lambda0=1.80 \
-	tasks.sieve.lambda1=1.90 \
-	tasks.sieve.mfb0=55 \
-	tasks.sieve.mfb1=58 \
-	tasks.sieve.ncurves0=10 \
-	tasks.sieve.ncurves1=15 \
-	tasks.I=13 \
-	tasks.sieve.qrange=10000 \
-	tasks.sieve.rels_wanted=30500000 \
-	tasks.polyselect.threads=10 --client-threads 10 -t all --no-colors
-else
-	./cado-nfs.py --server $cand tasks.workdir=$workdir server.port=$PortNum server.ssl=no server.whitelist=0.0.0.0/0 $addOpt \
-	tasks.lim0=5500000 \
-	tasks.lim1=7000000 \
-	tasks.lpb0=29 \
-	tasks.lpb1=29 \
-	tasks.sieve.mfb0=54 \
-	tasks.sieve.mfb1=56 \
-	tasks.sieve.lambda0=1.85 \
-	tasks.sieve.lambda1=1.92 \
-	tasks.sieve.ncurves0=20 \
-	tasks.sieve.ncurves1=25 \
-	tasks.I=13 \
-	tasks.sieve.qrange=10000 \
-	tasks.sieve.rels_wanted=39500000 \
-	tasks.polyselect.threads=11 --client-threads 11 -t all --no-colors
-fi
+./cado-nfs.py --server $cand tasks.workdir=$workdir server.port=$PortNum server.ssl=no server.whitelist=0.0.0.0/0 $addOpt \
+	$sieve_opts \
+	tasks.polyselect.threads=$Mthreads --client-threads $Mthreads -t all --no-colors
 
 
 ./cado-nfs.py --server $cand tasks.workdir=$workdir server.port=$PortNum server.ssl=no server.whitelist=0.0.0.0/0 $addOpt \
