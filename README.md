@@ -124,6 +124,7 @@ Edit `mine.sh`:
 | `MAX_MSIEVE_COUNT` | Max parallel msieve instances | `4` |
 | `CADO_CLIENT_THREAD_COUNT` | CADO client threads | `8` |
 | `ECM_STEP_OF_CANDIDATE_SIEVING` | ECM B1 screening levels | `6` |
+| `NAT_MASTER_URL` | NATS server URL for ECM coordination | `"nats://localhost:4222"` |
 
 Update the wallet ScriptPubKey:
 ```bash
@@ -143,6 +144,22 @@ Edit `mine.sh`:
 | `MINER_MODE` | Mining mode | `"CLIENT"` |
 | `CADO_SERVER_URL` | Master CADO-NFS URL | `"http://192.168.0.51:24242"` |
 | `CADO_CLIENT_THREAD_COUNT` | CADO client threads | `8` |
+| `NAT_MASTER_URL` | NATS server URL on master node | `"nats://192.168.0.51:4222"` |
+
+### NATS Server
+
+A [NATS](https://nats.io/) server is required on the master node for ECM master/worker coordination. Install and run it before starting the miner:
+
+```bash
+# Install NATS server
+curl -sf https://binaries.nats.dev/nats-io/nats-server/v2@latest | sh
+sudo mv nats-server /usr/local/bin/
+
+# Run NATS server (default port 4222)
+nats-server -a 0.0.0.0 -p 4222 &
+```
+
+Ensure that port 4222 is accessible from all slave nodes. Set `NAT_MASTER_URL` on both master and slave nodes to point to the master's NATS server address.
 
 ### Script Setup
 
@@ -277,6 +294,7 @@ Submit Block (RPC)
 | 19302 | TCP | GPU ECM server |
 | 19303 | TCP | CPU ECM server |
 | 24242 | TCP | CADO-NFS master |
+| 4222 | TCP | NATS server (ECM coordination) |
 | 29291 | TCP | Inter-node messaging |
 
 ## License
