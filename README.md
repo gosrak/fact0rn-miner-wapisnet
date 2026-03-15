@@ -47,7 +47,8 @@ fact0rn-miner-wapisnet/
 │   ├── ecm.with.cpu                # CPU ECM binary
 │   ├── isieve/sieverb              # Sieve table generator
 │   ├── cadorun.example.sh          # CADO-NFS run script template
-│   └── msieverun.example.sh        # msieve run script template
+│   ├── msieverun.example.sh        # msieve run script template
+│   └── sieving.params.json         # Sieving parameters by bit size (template)
 ├── gpu-ecm-server/                 # GPU ECM screening server
 │   ├── gpuecm.py                   # TCP server using ecm.with.cuda
 │   ├── gpuecm.sh                   # Launch script
@@ -163,6 +164,10 @@ cp msieverun.example.sh msieverun.sh
 > **Important:** `cadorun.sh` and `msieverun.sh` are called internally by the Python miner. The filenames must be exactly `cadorun.sh` and `msieverun.sh` - any other name will cause the miner to fail.
 >
 > These scripts contain parameters that must be tuned to your hardware environment and the current network difficulty (candidate bit size). Key settings include thread counts, polynomial selection options, and sieving parameters. Review and adjust them according to your CPU core count and the `Diff` value shown in the miner status line.
+
+**Sieving Parameters (`sieving.params.json`):**
+
+The included `bin/sieving.params.json` is a **template with default values** for reference. The sieving parameters (lim0, lim1, lpb, mfb, etc.) in this file are automatically selected by `cadorun.sh` based on the candidate's bit size. **You should customize these values to match your hardware setup** (number of slaves, GPU performance, CPU cores, etc.) for optimal factoring speed. Adjust the parameters for the bit ranges you encounter most frequently at the current network difficulty.
 
 ## Running
 
