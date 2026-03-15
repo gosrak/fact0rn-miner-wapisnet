@@ -9,9 +9,6 @@ export GPUECM_SERVER_IP="127.0.0.1 192.168.0.12 192.168.0.13"
 export GPUECM_SERVER_PORT="19302 19302 19302"
 export MINER_MODE="SERVER"
 export CADO_SERVER_URL="http://127.0.0.1:24242"
-#192.168.0.101 : central monitoring server
-#export CENTRAL_MN_IP="192.168.0.11"
-#export CENTRAL_MN_PORT=19201
 export USE_MSIEVE="True"
 export USE_DUAL_PROCESS="True"
 export SORT_SEED="True"
@@ -20,6 +17,7 @@ export MAX_MSIEVE_COUNT=4
 export CADO_CLIENT_THREAD_COUNT=8
 export PRE_GET_POLY="True"
 export ECM_STEP_OF_CANDIDATE_SIEVING=6
+export NAT_MASTER_URL="nats://127.0.0.1:4222"
 
 #
 cd $SHELL_PATH

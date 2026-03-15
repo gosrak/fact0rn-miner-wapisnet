@@ -10,6 +10,8 @@ export CADO_SERVER_URL="http://192.168.0.101:24242"
 export CENTRAL_MN_IP="192.168.0.11"
 export CENTRAL_MN_PORT=19201
 export CADO_CLIENT_THREAD_COUNT=8
+#192.168.0.101 : NATS server (ECM master)
+export NAT_MASTER_URL="nats://192.168.0.101:4222"
 
 cd $SHELL_PATH
 cpu_cores=$(lscpu | grep '^CPU(s):' | awk '{print $2}')
